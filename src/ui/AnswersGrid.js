@@ -6,7 +6,7 @@ import Col from "react-bootstrap/Col";
 import AnswerBtn from "./AnswerBtn";
 
 
-export default function AnswersGrid({answers, correct}){
+export default function AnswersGrid({answers, correct, onCorrect}){
     const answersPerRow = 2;
 
     // split answers into chunks (a chunk for each row)
@@ -20,6 +20,7 @@ export default function AnswersGrid({answers, correct}){
         if (btnAnswer === correct)
         {
             console.log("Correct!");
+            onCorrect();
         }
         else
         {

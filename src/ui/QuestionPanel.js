@@ -8,17 +8,22 @@ import '../ui/styles/QuestionPanel.css';
 import QuestionCard from "./QuestionCard";
 import AnswersGrid from "./AnswersGrid";
 
-export default function QuestionPanel( { questionObj }){
+export default function QuestionPanel({ questionObj, onCorrect }){
     return (
         <Container className="w-100 question-panel">
             <Row>
                 <Col>
-                    <QuestionCard category={questionObj.category}>{questionObj.question}</QuestionCard>
+                    <QuestionCard 
+                        category={questionObj.category}
+                        imageUrl={questionObj.imageUrl}
+                    >
+                        {questionObj.question}
+                    </QuestionCard>
                 </Col>
             </Row>
             <Row>
                 <Col>
-                    <AnswersGrid answers={questionObj.answers} correct={questionObj.correct}/>
+                    <AnswersGrid answers={questionObj.answers} correct={questionObj.correct} onCorrect={onCorrect}/>
                 </Col>
             </Row>
         </Container>
