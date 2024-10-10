@@ -1,0 +1,8 @@
+.start-btn {
+    background: rgba(50, 165, 50, 0.897);
+    border: 0px;
+}
+
+.start-btn:hover {
+    background: rgba(22, 131, 22, 0.897);
+}
