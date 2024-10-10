@@ -48,7 +48,7 @@ export default function MainPanel() {
             setTimeout(() => {
                 setQuestionsCount(questionsCount + 1);
                 setTimeLeft(30);
-            }, 2000);
+            }, 1000);
         }
         else {
             // if game is over, don't run a timer
@@ -73,7 +73,7 @@ export default function MainPanel() {
             if (btnElement) {
                 btnElement.style.filter = "hue-rotate(0)";
             }
-        }, 2000);
+        }, 1000);
 
     }
 
