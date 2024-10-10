@@ -8,7 +8,7 @@ import '../ui/styles/QuestionPanel.css';
 import QuestionCard from "./QuestionCard";
 import AnswersGrid from "./AnswersGrid";
 
-export default function QuestionPanel({ questionObj, onCorrect }){
+export default function QuestionPanel({ questionObj, onAnswer }){
     return (
         <Container className="w-100 question-panel">
             <Row>
@@ -23,7 +23,7 @@ export default function QuestionPanel({ questionObj, onCorrect }){
             </Row>
             <Row>
                 <Col>
-                    <AnswersGrid answers={questionObj.answers} correct={questionObj.correct} onCorrect={onCorrect}/>
+                    <AnswersGrid answers={questionObj.answers} correct={questionObj.correct} onAnswer={onAnswer}/>
                 </Col>
             </Row>
         </Container>

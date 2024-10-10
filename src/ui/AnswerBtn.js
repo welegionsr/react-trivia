@@ -8,8 +8,8 @@ export default function AnswerBtn({answer, clickHandler}){
     return (
         <Button 
             className="answer-btn w-100 mt-3" 
-            onClick={() => {
-                clickHandler(answer);
+            onClick={(e) => {
+                clickHandler(e, answer)
             }}
         >
 

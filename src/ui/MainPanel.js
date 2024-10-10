@@ -34,10 +34,28 @@ export default function MainPanel(){
         }
     }, [timeLeft]);
 
-    function handleCorrect(){
-        setQuestionsCount(questionsCount + 1);
-        setScore(score + 50);
-        setTimeLeft(30);
+    function handleAnswer(isCorrect, btnElement){
+        console.log("Button element: ", btnElement);
+        
+        if(isCorrect)
+        {
+            btnElement.style.backgroundColor = "green";
+            setScore(score + 50);
+        }
+        else
+        {
+            btnElement.style.backgroundColor = "red";
+        }
+
+        setTimeout(() => {
+            setQuestionsCount(questionsCount + 1);
+            setTimeLeft(30);
+            if(btnElement)
+            {
+                btnElement.style.backgroundColor = "";
+            }
+        }, 2000);
+
     }
 
     if(questionsCount - 1 === questionsDB.count)
@@ -57,7 +75,7 @@ export default function MainPanel(){
             </Row>
             <Row>
                 <Col>
-                    <QuestionPanel questionObj={currentQuestion} onCorrect={handleCorrect}/>
+                    <QuestionPanel questionObj={currentQuestion} onAnswer={handleAnswer}/>
                 </Col>
             </Row>
         </Container>
