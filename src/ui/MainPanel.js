@@ -9,6 +9,7 @@ import ScoreBar from "./ScoreBar";
 import QuestionPanel from "./QuestionPanel";
 import WinPanel from "./WinPanel";
 import questionsDB from "@/data/questionsdb";
+import WelcomePage from './WelcomePage';
 
 function shuffleQuestions(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -24,6 +25,19 @@ export default function MainPanel() {
     const [timeLeft, setTimeLeft] = useState(30);
     const [gameOver, setGameOver] = useState(false);
     const [correctCount, setCorrectCount] = useState(0);
+    const [gamePhase, setGamePhase] = useState('welcome'); // either 'welcome' / 'game' / 'end'
+
+    const startGame = () => {
+        setScore(0);
+        setQuestionsCount(1);
+        setGamePhase('game');
+        setTimeLeft(30);
+    };
+
+    const endGame = () => {
+        setGameOver(true);
+        setGamePhase('end');
+    };
 
     // Detect when game is over
     useEffect(() => {
@@ -88,7 +102,42 @@ export default function MainPanel() {
     let currentQuestion = questionsDB.questions[questionsCount - 1];
     return (
         <Container className="main-panel mb-5">
-            <Row className='mb-2'>
+            {
+                gamePhase === 'welcome' && (
+                    <WelcomePage onStart={startGame} />
+                )
+            }
+
+            {
+                gamePhase === 'game' && (
+                    <>
+                        <Row className='mb-2'>
+                            <Col>
+                                <ScoreBar current={questionsCount} total={questionsDB.count} score={score} timeLeft={(timeLeft)} />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                {currentQuestion ? (
+                                    <QuestionPanel questionObj={currentQuestion} onAnswer={handleAnswer} />
+                                ) : (
+                                    // Optionally, show something else here (like a "No more questions" message)
+                                    <div>No more questions</div>
+                                )}
+                            </Col>
+                        </Row>
+                    </>
+                )
+            }
+
+            {
+                gamePhase === 'end' && (
+                    <WinPanel score={score} />
+                )
+            }
+
+
+            {/* <Row className='mb-2'>
                 <Col>
                     <ScoreBar current={questionsCount} total={questionsDB.count} score={score} timeLeft={(timeLeft)} />
                 </Col>
@@ -102,7 +151,7 @@ export default function MainPanel() {
                         <div>No more questions</div>
                     )}
                 </Col>
-            </Row>
+            </Row> */}
         </Container>
     );
 }
