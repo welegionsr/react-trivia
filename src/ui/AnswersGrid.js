@@ -56,7 +56,8 @@ export default function AnswersGrid({answers, correct, onAnswer}){
                                 <Col key={colIndex} className="text-center">
                                     <AnswerBtn 
                                         answer={answer} 
-                                        clickHandler={handleClick} 
+                                        clickHandler={handleClick}
+                                        key={`${answer}-${colIndex}`} // Unique key
                                     />
                                 </Col>
                             ))

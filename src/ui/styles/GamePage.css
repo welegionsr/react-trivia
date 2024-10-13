@@ -5,3 +5,25 @@
     border: 4px solid rgb(255, 255, 255);
     max-width: 800px;
 }
+
+.question-slide-enter {
+    opacity: 0;
+    transform: translateY(-100%);
+}
+
+.question-slide-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: transform 500ms ease-in-out, opacity 500ms ease-in-out;
+}
+
+.question-slide-exit {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.question-slide-exit-active {
+    opacity: 0;
+    transform: translateY(100%);
+    transition: transform 500ms ease-in-out, opacity 500ms ease-in-out;
+}

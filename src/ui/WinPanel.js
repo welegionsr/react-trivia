@@ -1,3 +1,5 @@
+'use client';
+
 import '@/ui/styles/WinPanel.css';
 import { Badge, Button, Card } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';

@@ -1,7 +1,9 @@
+'use client';
+
 import './styles/GamePage.css';
 
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
@@ -9,11 +11,11 @@ import Container from 'react-bootstrap/Container';
 import ScoreBar from './ScoreBar';
 import QuestionPanel from './QuestionPanel';
 import questionsDB from '@/data/questionsdb';
+import { CSSTransition } from 'react-transition-group';
 
-export default function GamePage({ questionsCount, setQuestionsCount, score, setScore, gameOver, endGame, correctCount, setCorrectCount }){
+export default function GamePage({ questionsCount, setQuestionsCount, score, setScore, gameOver, endGame, correctCount, setCorrectCount }) {
     const [timeLeft, setTimeLeft] = useState(30);
-
-
+    
     // set up the timer
     useEffect(() => {
         if (timeLeft > 0 && !gameOver) {
@@ -33,26 +35,21 @@ export default function GamePage({ questionsCount, setQuestionsCount, score, set
         }
     }, [timeLeft, gameOver]);
 
-    function handleNextQuestion(){
-        if(questionsCount >= questionsDB.count) {
+    const handleNextQuestion = useCallback(() => {
+        if (questionsCount >= questionsDB.count) {
             endGame();
-        }
-        else
-        {
-            setQuestionsCount(questionsCount + 1);
+        } else {
+            setQuestionsCount(prevCount => prevCount + 1);
             setTimeLeft(30);
         }
-    }
+    }, [questionsCount, endGame]);
 
-    function handleAnswer(isCorrect, btnElement) {
-        console.log("Button element: ", btnElement);
-
+    const handleAnswer = useCallback((isCorrect, btnElement) => {
         if (isCorrect) {
-            setCorrectCount(correctCount + 1);
+            setCorrectCount(prevCount => prevCount + 1);
+            setScore(prevScore => prevScore + (timeLeft !== 0 ? timeLeft * 10 : 10));
             btnElement.style.filter = "hue-rotate(-50deg)";
-            setScore(score + (timeLeft != 0 ? timeLeft * 10 : 10));
-        }
-        else {
+        } else {
             btnElement.style.filter = "hue-rotate(50deg)";
         }
 
@@ -62,11 +59,10 @@ export default function GamePage({ questionsCount, setQuestionsCount, score, set
                 btnElement.style.filter = "hue-rotate(0)";
             }
         }, 1000);
+    }, [handleNextQuestion, timeLeft]);
 
-    }
-
-    let currentQuestion = questionsDB.questions[questionsCount - 1];
-
+    let currentQuestion = useMemo(() => questionsDB.questions[questionsCount - 1], [questionsCount]); // currentQuestion will only be recalculated (and cause re-renders) when questionsCount changes.
+    console.log("Current question: ", currentQuestion);
     return (
         <Container className="game-panel mb-5">
             <Row className='mb-2'>
@@ -74,16 +70,26 @@ export default function GamePage({ questionsCount, setQuestionsCount, score, set
                     <ScoreBar current={questionsCount} total={questionsDB.count} score={score} timeLeft={(timeLeft)} />
                 </Col>
             </Row>
-            <Row>
-                <Col>
-                    {currentQuestion ? (
-                        <QuestionPanel questionObj={currentQuestion} onAnswer={handleAnswer} />
-                    ) : (
-                        // Optionally, show something else here (like a "No more questions" message)
-                        <div>No more questions</div>
-                    )}
-                </Col>
-            </Row>
+            <CSSTransition
+                in={!!currentQuestion}
+                timeout={500}
+                classNames="question-slide"
+                unmountOnExit
+                onEnter={() => console.log('Enter animation triggered')}
+                onEntered={() => console.log('Enter animation completed')}
+                onExit={() => console.log('Exit animation triggered')}
+                onExited={() => console.log('Exit animation completed')}
+            >
+                <Row key={questionsCount}>
+                    <Col>
+                        {currentQuestion ? (
+                            <QuestionPanel questionObj={currentQuestion} onAnswer={handleAnswer} />
+                        ) : (
+                            <div>No more questions</div>
+                        )}
+                    </Col>
+                </Row>
+            </CSSTransition>
         </Container>
     );
 }

@@ -4,7 +4,7 @@ import Badge from 'react-bootstrap/Badge';
 import { Col, Row } from 'react-bootstrap';
 import Image from 'react-bootstrap/Image';
 
-export default function QuestionCard({ category, children, imageUrl }){
+export default function QuestionCard({ category, children, imageUrl }) {
     return (
         <Card className='question-card'>
             <Card.Header>
@@ -16,10 +16,9 @@ export default function QuestionCard({ category, children, imageUrl }){
                     <Col>
                         {children}
                     </Col>
-                    <Col>
-                        {
-                            imageUrl ? 
-                                
+                    {
+                        imageUrl ?
+                            <Col>
                                 <Image
                                     className="question-image"
                                     alt="question image"
@@ -27,13 +26,13 @@ export default function QuestionCard({ category, children, imageUrl }){
                                     fluid
                                     thumbnail
                                 />
+                            </Col>
                             : ""}
-                    </Col>
                 </Row>
-                
-            </Card.Body> 
-            
-            
+
+            </Card.Body>
+
+
         </Card>
     );
 }
