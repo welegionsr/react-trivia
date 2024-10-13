@@ -4,6 +4,7 @@ import './styles/GamePage.css';
 import { useState, useEffect } from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
 
 import ScoreBar from './ScoreBar';
 import QuestionPanel from './QuestionPanel';
@@ -67,7 +68,7 @@ export default function GamePage({ questionsCount, setQuestionsCount, score, set
     let currentQuestion = questionsDB.questions[questionsCount - 1];
 
     return (
-        <>
+        <Container className="game-panel mb-5">
             <Row className='mb-2'>
                 <Col>
                     <ScoreBar current={questionsCount} total={questionsDB.count} score={score} timeLeft={(timeLeft)} />
@@ -83,6 +84,6 @@ export default function GamePage({ questionsCount, setQuestionsCount, score, set
                     )}
                 </Col>
             </Row>
-        </>
+        </Container>
     );
 }

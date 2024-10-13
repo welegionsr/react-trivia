@@ -13,8 +13,8 @@ export default function WinPanel({ score, questionsCount, correctCount }){
         <Container className="mt-2">
             <Row className="justify-content-center">
                 <Card className="text-center" style={{ width: '26rem', padding: 0 }}>
-                    <Card.Img variant='top' src='logo.webp'/>
-                    <Card.Header><h4>The End!</h4></Card.Header>
+                    <Card.Img variant='top' src='the-end.webp'/>
+                    <Card.Header><h4>Your results:</h4></Card.Header>
                     <Card.Body>
                         <p>
                             Questions: {' ' + correctCount + '/' + (questionsCount-1)} 

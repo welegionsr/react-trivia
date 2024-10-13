@@ -2,7 +2,6 @@
 
 import '@/ui/styles/MainPanel.css';
 import { useState } from "react";
-import Container from "react-bootstrap/Container";
 import WinPanel from "./WinPanel";
 import WelcomePage from './WelcomePage';
 import GamePage from './GamePage';
@@ -36,7 +35,7 @@ export default function MainPanel() {
     };
 
     return (
-        <Container className="main-panel mb-5">
+        <>
             {
                 gamePhase === 'welcome' && (
                     <WelcomePage onStart={startGame} />
@@ -68,7 +67,7 @@ export default function MainPanel() {
                 )
             }
 
-        </Container>
+        </>
     );
 }
 
