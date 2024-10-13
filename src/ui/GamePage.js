@@ -11,11 +11,11 @@ import Container from 'react-bootstrap/Container';
 import ScoreBar from './ScoreBar';
 import QuestionPanel from './QuestionPanel';
 import questionsDB from '@/data/questionsdb';
-import { CSSTransition } from 'react-transition-group';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function GamePage({ questionsCount, setQuestionsCount, score, setScore, gameOver, endGame, correctCount, setCorrectCount }) {
     const [timeLeft, setTimeLeft] = useState(30);
-    
+
     // set up the timer
     useEffect(() => {
         if (timeLeft > 0 && !gameOver) {
@@ -62,7 +62,6 @@ export default function GamePage({ questionsCount, setQuestionsCount, score, set
     }, [handleNextQuestion, timeLeft]);
 
     let currentQuestion = useMemo(() => questionsDB.questions[questionsCount - 1], [questionsCount]); // currentQuestion will only be recalculated (and cause re-renders) when questionsCount changes.
-    console.log("Current question: ", currentQuestion);
     return (
         <Container className="game-panel mb-5">
             <Row className='mb-2'>
@@ -70,26 +69,26 @@ export default function GamePage({ questionsCount, setQuestionsCount, score, set
                     <ScoreBar current={questionsCount} total={questionsDB.count} score={score} timeLeft={(timeLeft)} />
                 </Col>
             </Row>
-            <CSSTransition
-                in={!!currentQuestion}
-                timeout={500}
-                classNames="question-slide"
-                unmountOnExit
-                onEnter={() => console.log('Enter animation triggered')}
-                onEntered={() => console.log('Enter animation completed')}
-                onExit={() => console.log('Exit animation triggered')}
-                onExited={() => console.log('Exit animation completed')}
-            >
-                <Row key={questionsCount}>
-                    <Col>
-                        {currentQuestion ? (
-                            <QuestionPanel questionObj={currentQuestion} onAnswer={handleAnswer} />
-                        ) : (
-                            <div>No more questions</div>
-                        )}
-                    </Col>
-                </Row>
-            </CSSTransition>
+            <Row key={questionsCount}>
+                <Col>
+                    {currentQuestion ? (
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={questionsCount}
+                                initial={{ opacity: 0, y: -100, scale: 0 }} // Start hidden
+                                animate={{ opacity: 1, y: 0, scale: 1 }}    // Fade and slide in
+                                exit={{ opacity: 0, y: 100, scale: 0 }}     // Fade and slide out
+                                transition={{ duration: 0.25 }}
+                            >
+                                <QuestionPanel questionObj={currentQuestion} onAnswer={handleAnswer} />
+                            </motion.div>
+                        </AnimatePresence>
+                    ) : (
+                        <div>No more questions</div>
+                    )}
+                </Col>
+            </Row>
+
         </Container>
     );
 }
