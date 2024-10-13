@@ -1,15 +1,11 @@
 'use client';
 
 import '@/ui/styles/MainPanel.css';
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import ScoreBar from "./ScoreBar";
-import QuestionPanel from "./QuestionPanel";
 import WinPanel from "./WinPanel";
-import questionsDB from "@/data/questionsdb";
 import WelcomePage from './WelcomePage';
+import GamePage from './GamePage';
 
 function shuffleQuestions(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -22,7 +18,6 @@ function shuffleQuestions(array) {
 export default function MainPanel() {
     let [questionsCount, setQuestionsCount] = useState(1);
     let [score, setScore] = useState(0);
-    const [timeLeft, setTimeLeft] = useState(30);
     const [gameOver, setGameOver] = useState(false);
     const [correctCount, setCorrectCount] = useState(0);
     const [gamePhase, setGamePhase] = useState('welcome'); // either 'welcome' / 'game' / 'end'
@@ -31,75 +26,15 @@ export default function MainPanel() {
         setScore(0);
         setQuestionsCount(1);
         setGamePhase('game');
-        setTimeLeft(30);
+        setGameOver(false);
     };
 
     const endGame = () => {
+        setQuestionsCount(questionsCount + 1);
         setGameOver(true);
         setGamePhase('end');
     };
 
-    // Detect when game is over
-    useEffect(() => {
-        if (questionsCount - 1 === questionsDB.count) {
-            setGameOver(true);
-        }
-    }, [questionsCount]);
-
-    // set up the timer
-    useEffect(() => {
-        if (timeLeft > 0 && !gameOver) {
-            const timer = setInterval(() => {
-                setTimeLeft((prevTime) => prevTime - 1);
-            }, 1000);
-
-            return () => clearInterval(timer)
-        }
-        else if (timeLeft === 0 && !gameOver) {
-            // if time is up, move to next question!
-            // TODO: show message of time passed!
-            console.log("time passed!");
-            setTimeout(() => {
-                setQuestionsCount(questionsCount + 1);
-                setTimeLeft(30);
-            }, 1000);
-        }
-        else {
-            // if game is over, don't run a timer
-        }
-    }, [timeLeft, questionsCount, gameOver]);
-
-    function handleAnswer(isCorrect, btnElement) {
-        console.log("Button element: ", btnElement);
-
-        if (isCorrect) {
-            setCorrectCount(correctCount + 1);
-            btnElement.style.filter = "hue-rotate(-50deg)";
-            setScore(score + (timeLeft != 0 ? timeLeft * 10 : 10));
-        }
-        else {
-            btnElement.style.filter = "hue-rotate(50deg)";
-        }
-
-        setTimeout(() => {
-            setQuestionsCount(questionsCount + 1);
-            setTimeLeft(30);
-            if (btnElement) {
-                btnElement.style.filter = "hue-rotate(0)";
-            }
-        }, 1000);
-
-    }
-
-    if (gameOver) {
-        return <WinPanel
-            score={score}
-            questionsCount={questionsCount}
-            correctCount={correctCount}
-        />
-    }
-
-    let currentQuestion = questionsDB.questions[questionsCount - 1];
     return (
         <Container className="main-panel mb-5">
             {
@@ -110,48 +45,29 @@ export default function MainPanel() {
 
             {
                 gamePhase === 'game' && (
-                    <>
-                        <Row className='mb-2'>
-                            <Col>
-                                <ScoreBar current={questionsCount} total={questionsDB.count} score={score} timeLeft={(timeLeft)} />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                {currentQuestion ? (
-                                    <QuestionPanel questionObj={currentQuestion} onAnswer={handleAnswer} />
-                                ) : (
-                                    // Optionally, show something else here (like a "No more questions" message)
-                                    <div>No more questions</div>
-                                )}
-                            </Col>
-                        </Row>
-                    </>
+                    <GamePage
+                        questionsCount={questionsCount}
+                        setQuestionsCount={setQuestionsCount}
+                        score={score}
+                        setScore={setScore}
+                        gameOver={gameOver}
+                        endGame={endGame} // Function to call when game ends
+                        correctCount={correctCount}
+                        setCorrectCount={setCorrectCount}
+                    />
                 )
             }
 
             {
                 gamePhase === 'end' && (
-                    <WinPanel score={score} />
+                    <WinPanel
+                        score={score}
+                        questionsCount={questionsCount}
+                        correctCount={correctCount}
+                    />
                 )
             }
 
-
-            {/* <Row className='mb-2'>
-                <Col>
-                    <ScoreBar current={questionsCount} total={questionsDB.count} score={score} timeLeft={(timeLeft)} />
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                    {currentQuestion ? (
-                        <QuestionPanel questionObj={currentQuestion} onAnswer={handleAnswer} />
-                    ) : (
-                        // Optionally, show something else here (like a "No more questions" message)
-                        <div>No more questions</div>
-                    )}
-                </Col>
-            </Row> */}
         </Container>
     );
 }
