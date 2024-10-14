@@ -5,9 +5,10 @@ import Row from 'react-bootstrap/Row';
 import Button from "react-bootstrap/Button";
 import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
+import OptionsMenu from './OptionsMenu';
 
 
-export default function WelcomePage({onStart}){
+export default function WelcomePage({onStart, setQuestionsTotal, setDifficulty}){
     return (
         <Container className="mt-2">
             <Row className="justify-content-center">
@@ -15,13 +16,13 @@ export default function WelcomePage({onStart}){
                     <Card.Img variant='top' src='logo.webp' />
                     <Card.Header><h4>Trivia Game</h4></Card.Header>
                     <Card.Body>
-                        <p>
+                        <p className="mb-4">
                             This is a simple trivia game!
                         </p>
-
-                        <p>
-                            (Soon there will be options here)
-                        </p>
+                        
+                       
+                        <OptionsMenu setQuestionsTotal={setQuestionsTotal} setDifficulty={setDifficulty}/>
+                       
 
                     </Card.Body>
                     <Card.Footer>

@@ -10,10 +10,9 @@ import Container from 'react-bootstrap/Container';
 
 import ScoreBar from './ScoreBar';
 import QuestionPanel from './QuestionPanel';
-import questionsDB from '@/data/questionsdb';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function GamePage({ questionsCount, setQuestionsCount, score, setScore, gameOver, endGame, correctCount, setCorrectCount }) {
+export default function GamePage({ questions, questionsCount, setQuestionsCount, score, setScore, gameOver, endGame, correctCount, setCorrectCount, questionsTotal, difficulty }) {
     const [timeLeft, setTimeLeft] = useState(30);
 
     // set up the timer
@@ -36,7 +35,7 @@ export default function GamePage({ questionsCount, setQuestionsCount, score, set
     }, [timeLeft, gameOver]);
 
     const handleNextQuestion = useCallback(() => {
-        if (questionsCount >= questionsDB.count) {
+        if (questionsCount >= questions.length) {
             endGame();
         } else {
             setQuestionsCount(prevCount => prevCount + 1);
@@ -61,12 +60,12 @@ export default function GamePage({ questionsCount, setQuestionsCount, score, set
         }, 1000);
     }, [handleNextQuestion, timeLeft]);
 
-    let currentQuestion = useMemo(() => questionsDB.questions[questionsCount - 1], [questionsCount]); // currentQuestion will only be recalculated (and cause re-renders) when questionsCount changes.
+    let currentQuestion = useMemo(() => questions[questionsCount - 1], [questionsCount]); // currentQuestion will only be recalculated (and cause re-renders) when questionsCount changes.
     return (
         <Container className="game-panel mb-5">
             <Row className='mb-2'>
                 <Col>
-                    <ScoreBar current={questionsCount} total={questionsDB.count} score={score} timeLeft={(timeLeft)} />
+                    <ScoreBar current={questionsCount} total={questions.length} score={score} timeLeft={(timeLeft)} />
                 </Col>
             </Row>
             <Row key={questionsCount}>
