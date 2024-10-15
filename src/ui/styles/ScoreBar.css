@@ -6,3 +6,13 @@
     border: 2px solid rgba(170, 170, 170, 0.2);
 }
 
+.time-left {
+    padding: 4px;
+}
+
+.time-warning {
+    font-weight: 700;
+    background: rgb(160, 38, 38);
+    color: white;
+    border-radius: 8px;
+}

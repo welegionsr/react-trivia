@@ -10,6 +10,7 @@ import { useLayoutEffect, useState } from 'react';
 export default function AnswersGrid({answers, correct, onAnswer}){
     const answersPerRow = 2;
     const [shuffledAnswers, setShuffledAnswers] = useState([]);
+    const [answered, setAnswered] = useState(false); // Track whether the question has been answered (to avoid multiple clicks)
 
     useLayoutEffect(() => {
         const shuffled = [...answers];
@@ -30,6 +31,10 @@ export default function AnswersGrid({answers, correct, onAnswer}){
     }
 
     function handleClick(e, btnAnswer){
+        if (answered) return; // Prevent further clicks after the first answer is given
+
+        setAnswered(true); // Set to true to block further answers
+
         e.persist(); // prevents the event from being nullified
         
         console.log("Event: ", e);  // Log the event to check
@@ -44,6 +49,11 @@ export default function AnswersGrid({answers, correct, onAnswer}){
             console.log("Incorrect! you pressed " + btnAnswer);
             onAnswer(false, e.target);
         }
+
+        // Optionally reset the flag after some delay if needed (e.g., after a new question)
+        setTimeout(() => {
+            setAnswered(false);
+        }, 1000); // Reset after 1 second (adjust as needed)
     }
 
     return (
@@ -58,6 +68,7 @@ export default function AnswersGrid({answers, correct, onAnswer}){
                                         answer={answer} 
                                         clickHandler={handleClick}
                                         key={`${answer}-${colIndex}`} // Unique key
+                                        disabled={answered}
                                     />
                                 </Col>
                             ))

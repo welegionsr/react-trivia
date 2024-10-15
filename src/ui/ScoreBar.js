@@ -15,7 +15,7 @@ export default function ScoreBar({current, total, score, timeLeft}){
                     Question {current}/{total}
                 </Col>
                 <Col xs={4}>
-                    Time: {timeLeft}s
+                    Time: <span className={`time-left ${timeLeft <= 10 ? `time-warning` : ``}`}>{' '}{timeLeft}s</span>
                 </Col>
                 <Col>
                     Score: {score}
