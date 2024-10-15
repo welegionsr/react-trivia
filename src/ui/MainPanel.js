@@ -26,14 +26,20 @@ export default function MainPanel() {
     const [difficulty, setDifficulty] = useState(0);
 
     const startGame = () => {
+        // get a fresh set of questions
+        let questionsPool = [...questionsDB.questions];
+
         // first, shuffle the questions!
-        const shuffledQuestions = [...questions];
-        shuffleQuestions(shuffledQuestions);
-        setQuestions(shuffledQuestions.slice(0, questionsTotal)); // get only the required number of questions from the pool 
+        shuffleQuestions(questionsPool);
+
+        // now slice the questions array so that you'd get only the number of questions the user asked for
+        const selectedQuestions = questionsPool.slice(0, questionsTotal);
+        setQuestions(selectedQuestions); // set the new array of questions
 
         // reset game values
         setScore(0);
         setQuestionsCount(1);
+        setCorrectCount(0);
         setGamePhase('game');
         setGameOver(false);
     };
@@ -75,6 +81,7 @@ export default function MainPanel() {
                         score={score}
                         questionsCount={questionsCount}
                         correctCount={correctCount}
+                        setGamePhase={setGamePhase}
                     />
                 )
             }

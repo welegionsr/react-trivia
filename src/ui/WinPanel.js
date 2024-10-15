@@ -4,11 +4,26 @@ import '@/ui/styles/WinPanel.css';
 import { Badge, Button, Card } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
+import StarRating from './StarRating';
 
-export default function WinPanel({ score, questionsCount, correctCount }){
+export default function WinPanel({ score, questionsCount, correctCount, setGamePhase }){
+
+    function calculateStarRating(correctCount, questionsCount) {
+        if (questionsCount === 0) return 0; // avoid division by zero
+
+        // calculate the accuracy ratio and scale it to a 0-5 rating
+        const accuracy = correctCount / (questionsCount - 1);
+        const starRating = accuracy * 5;
+
+        // round to nearest integer to get whole stars only
+        console.log('accuracy: ' + accuracy);
+        console.log('starRating(rounded):' + Math.round(starRating));
+        console.log('starRating:' + starRating);
+        return Math.floor(starRating);
+    }
 
     function handleClick(){
-        window.location.replace("http://localhost:3000");
+        setGamePhase('welcome');
     }
 
     return (
@@ -25,6 +40,8 @@ export default function WinPanel({ score, questionsCount, correctCount }){
                             Score: {' '}
                             <Badge bg={`${(score / questionsCount) > 100 ? "success" : "danger"}`}>{score}</Badge>
                         </p>
+                        <StarRating stars={calculateStarRating(correctCount, questionsCount)}/>
+                        
                         
                     </Card.Body>
                     <Card.Footer>
